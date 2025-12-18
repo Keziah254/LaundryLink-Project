@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="place-order">
+  <div class="container">
+    <h2 class="section-title">🧺 Place Your Laundry Order</h2>
+    <p class="section-subtitle">Select your service and fill out the details below.</p>
+
+    <form method="POST" action="{{ url_for('place_order') }}" class="order-form">
+
+      <div class="form-group">
+        <label for="service_id">Select Service</label>
+        <select name="service_id" id="service_id" required>
+          {% for s in services %}
+            <option value="{{ s.id }}" {% if (request.args.get('service_id') or '0')|int == s.id %}selected{% endif %}>
+              {{ s.name }} — KES {{ s.price }}/{{ s.unit }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">
+          Quantity ({{ services[0].unit if services and services[0].unit else 'kg/items' }})
+        </label>
+        <input
+          type="number"
+          step="0.1"
+          min="1"
+          name="quantity"
+          id="quantity"
+          value="1"
+          required
+          style="width: 120px; padding: 8px; text-align: center; color: #333; background-color: #fff; border: 1px solid #ccc; border-radius: 5px;">
+      </div>
+
+      <div class="form-group">
+        <label for="pickup_address">Pickup Address</label>
+        <input
+          type="text"
+          id="pickup_address"
+          name="pickup_address"
+          value="{{ user.address or '' }}"
+          placeholder="Enter pickup location"
+          class="form-control"
+          style="background-color: #fff; color: #333; border: 1px solid #ccc; border-radius: 5px; padding: 10px; width: 100%;"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="delivery_address">Delivery Address</label>
+        <input
+          type="text"
+          id="delivery_address"
+          name="delivery_address"
+          value="{{ user.address or '' }}"
+          placeholder="Enter delivery location"
+          class="form-control"
+          style="background-color: #fff; color: #333; border: 1px solid #ccc; border-radius: 5px; padding: 10px; width: 100%;"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="payment_method">Payment Method</label>
+        <select name="payment_method" id="payment_method" onchange="toggleMpesa()" required>
+          <option value="cod">Cash on Delivery</option>
+          <option value="mpesa">M-Pesa</option>
+        </select>
+      </div>
+
+      <div id="mpesa-phone" class="form-group" style="display:none;">
+        <label>M-Pesa Phone Number</label>
+        <input
+          type="text"
+          name="mpesa_phone"
+          value="0759158858"
+          readonly
+          style="background-color: #f5f5f5; color: #555; cursor: not-allowed;"
+        >
+      </div>
+
+      <div class="form-group" style="text-align: center; margin-top: 20px;">
+        <button
+          type="submit"
+          class="btn place-order-btn"
+          style="
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;">
+          Place Order
+        </button>
+      </div>
+    </form> </div>
+</section>
+
+<script>
+function toggleMpesa() {
+  const payment = document.getElementById('payment_method').value;
+  const mpesaDiv = document.getElementById('mpesa-phone');
+  if (mpesaDiv) {
+    mpesaDiv.style.display = (payment === 'mpesa') ? 'block' : 'none';
+  }
+}
+
+// Ensure the M-Pesa field is correct on page load
+document.addEventListener('DOMContentLoaded', toggleMpesa);
+
+// Button hover effect
+const btn = document.querySelector('.place-order-btn');
+if (btn) {
+  btn.addEventListener('mouseover', () => btn.style.backgroundColor = '#0056b3');
+  btn.addEventListener('mouseout', () => btn.style.backgroundColor = '#007bff');
+}
+</script>
+
+<style>
+.place-order {
+  padding: 60px 0;
+  background: #f9f9f9;
+}
+.container {
+  max-width: 650px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.section-title {
+  text-align: center;
+  color: #005f73;
+  margin-bottom: 10px;
+}
+.section-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+}
+.order-form .form-group {
+  margin-bottom: 20px;
+}
+.order-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+.order-form input,
+.order-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+}
+</style>
+{% endblock %}

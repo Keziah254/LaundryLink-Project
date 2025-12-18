@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Create Your Account</h2>
+    <form method="POST">
+
+      <label>Full Name</label>
+      <input type="text" name="name" placeholder="Enter full name" required>
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Enter email" required>
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter password" required>
+
+      <label>Role</label>
+      <select name="role" id="role" onchange="toggleAdminCode()">
+        <option value="client">Client 👤</option>
+        <option value="staff">Staff 👷</option>
+        <option value="admin">Admin 👑</option>
+      </select>
+
+      <div id="adminCodeField" style="display: none;">
+        <label>Admin Access Code</label>
+        <input type="password" name="admin_code" placeholder="Enter secret code">
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function toggleAdminCode() {
+  let role = document.getElementById("role").value;
+  let field = document.getElementById("adminCodeField");
+  field.style.display = role === "admin" ? "block" : "none";
+}
+</script>
+{% endblock %}

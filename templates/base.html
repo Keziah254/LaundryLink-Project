@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Laundry Link</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+/>
+
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header>
+    <h1>Laundry Link</h1>
+    <nav>
+      <a href="{{ url_for('index') }}">Home</a>
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('place_order') }}">Place Order</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <!-- Flash Messages -->
+  <div class="messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Laundry Link | All Rights Reserved</p>
+  </footer>
+
+</body>
+</html>

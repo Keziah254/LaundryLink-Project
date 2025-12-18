@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="assign-order">
+  <div class="container">
+    <h2 style="color:#ff7b00;">Assign Order #{{ order.id }}</h2>
+
+    <form method="POST">
+      <label for="staff_id" style="color:white;">Select Staff:</label>
+      <select name="staff_id" id="staff_id" required>
+        {% for s in staff_members %}
+        <option value="{{ s.id }}">{{ s.name }} — {{ s.email }}</option>
+        {% endfor %}
+      </select>
+
+      <button type="submit" class="btn" style="background-color:#ff7b00; color:black; font-weight:bold;">
+        Assign Order
+      </button>
+    </form>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="btn" style="background-color:black; color:#ff7b00; margin-top:15px;">
+      ← Back to Dashboard
+    </a>
+  </div>
+</section>
+{% endblock %}

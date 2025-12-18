@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero-content">
+    <h2>Laundry Link – Your Trusted Laundry Partner</h2>
+    <p>Fast, affordable, and professional laundry services right at your doorstep.</p>
+    <a href="{{ url_for('register') }}" class="btn">Get Started</a>
+  </div>
+</section>
+
+<section class="services">
+  <h2>🧺 Laundry Services We Offer</h2>
+  <div class="service-grid">
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/washing.jpeg') }}" alt="Basic Washing">
+      <h3>Basic Washing</h3>
+      <p>Normal wash & dry, per kilogram or per item, folded neatly.</p>
+    </div>
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/ironing.jpeg') }}" alt="Ironing">
+      <h3>Ironing / Pressing</h3>
+      <p>Iron-only service or iron + folding for your clean clothes.</p>
+    </div>
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/drycleaning.jpeg') }}" alt="Dry Cleaning">
+      <h3>Dry Cleaning</h3>
+      <p>Delicate fabrics (suits, gowns, jackets) cleaned with care.</p>
+    </div>
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/combo.jpeg') }}" alt="Wash & Iron">
+      <h3>Wash & Iron Combo</h3>
+      <p>Full service: washed, dried, and ironed — ready to wear.</p>
+    </div>
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/stain.jpeg') }}" alt="Stain Removal">
+      <h3>Stain Removal</h3>
+      <p>Targeted removal of oil, wine, mud, and tough stains.</p>
+    </div>
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/special.jpeg') }}" alt="Special Fabric Care">
+      <h3>Special Fabric Care</h3>
+      <p>We clean blankets, duvets, curtains, leather, and silk.</p>
+    </div>
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/pickup.jpeg') }}" alt="Pickup & Delivery">
+      <h3>Pickup & Delivery</h3>
+      <p>We collect and deliver laundry from your home or office.</p>
+    </div>
+
+    <div class="service-card">
+      <img src="{{ url_for('static', filename='images/subscription.jpeg') }}" alt="Basic Washing">
+
+      <h3>Subscription Packages</h3>
+      <p>Weekly or monthly laundry plans tailored for you.</p>
+    </div>
+
+    <div class="service-card">
+            <img src="{{ url_for('static', filename='images/express.jpeg') }}" alt="Basic Washing">
+
+      <h3>Express / Same-Day</h3>
+      <p>Get your clothes cleaned in hours (premium charge applies).</p>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="pricing">
+  <h2>💸 Laundry Pricing (KES)</h2>
+
+  <h3>Basic Washing</h3>
+  <ul>
+    <li>Wash & Dry → <strong>KES 200</strong> per Kg</li>
+    <li>Wash, Dry & Fold → <strong>KES 250</strong> per Kg</li>
+    <li>Wash & Iron → <strong>KES 350</strong> per Kg</li>
+    <li>Kids’ Clothes → <strong>KES 150</strong> per Kg</li>
+    <li>Express Wash (Same-Day) → +30% extra</li>
+  </ul>
+
+  <h3>Ironing / Pressing</h3>
+  <ul>
+    <li>Iron Only → <strong>KES 50</strong> per item</li>
+    <li>Shirts (bulk) → <strong>KES 350</strong> for 10 shirts</li>
+  </ul>
+
+  <h3>Dry Cleaning</h3>
+  <ul>
+    <li>Suit (2-piece) → <strong>KES 600</strong></li>
+    <li>Jacket/Coat → <strong>KES 400</strong></li>
+    <li>Dress/Gown → <strong>KES 500 – 800</strong></li>
+  </ul>
+
+  <h3>Special Fabric Care</h3>
+  <ul>
+    <li>Bedsheet → <strong>KES 200</strong></li>
+    <li>Blanket → <strong>KES 500</strong></li>
+    <li>Duvet → <strong>KES 700</strong></li>
+    <li>Curtains (per meter) → <strong>KES 100</strong></li>
+  </ul>
+
+  <h3>Extra Services</h3>
+  <ul>
+    <li>Stain Removal → <strong>KES 100 – 200</strong> per item</li>
+    <li>Leather/Silk Care → <strong>KES 800</strong> per item</li>
+  </ul>
+
+  <h3>Pickup & Delivery</h3>
+  <ul>
+    <li>Standard (within town) → <strong>KES 200</strong></li>
+    <li>Outside town → <strong>KES 300 – 500</strong> (negotiable)</li>
+  </ul>
+</section>
+
+<!-- 💬 Testimonials Section -->
+<section class="testimonials">
+  <h2>💬 What Our Clients Say</h2>
+  <p class="subtitle">Trusted by hundreds of happy customers across Kenya 🚀</p>
+
+  <div class="testimonial-grid">
+
+    <div class="testimonial-card">
+      <img src="{{ url_for('static', filename='images/client1.jpeg') }}" alt="Client 1">
+      <p class="review">"Laundry Link has made my life so much easier! Pickup and delivery are always on time, and my clothes come back spotless and neatly folded."</p>
+      <h3>— Sarah M.</h3>
+      <span class="location">Nairobi</span>
+    </div>
+
+    <div class="testimonial-card">
+      <img src="{{ url_for('static', filename='images/client2.jpeg') }}" alt="Client 2">
+      <p class="review">"I love the express service! It saved me so much time when I had a last-minute event. Highly recommend their wash & iron package."</p>
+      <h3>— John K.</h3>
+      <span class="location">Eldoret</span>
+    </div>
+
+    <div class="testimonial-card">
+      <img src="{{ url_for('static', filename='images/client3.jpeg') }}" alt="Client 3">
+      <p class="review">"Professional, fast, and affordable. The subscription package is worth every shilling. My laundry is now worry-free every week!"</p>
+      <h3>— Mercy A.</h3>
+      <span class="location">Mombasa</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ⚙️ How LaundryLink Works -->
+<section class="how-it-works">
+  <h2>⚙️ How LaundryLink Works</h2>
+  <p class="subtitle">Just 4 simple steps to fresh, clean clothes 👕✨</p>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="icon">📱</div>
+      <h3>1. Book Online</h3>
+      <p>Sign up or log in and schedule your laundry pickup from the comfort of your home or office.</p>
+    </div>
+
+    <div class="step">
+      <div class="icon">🚚</div>
+      <h3>2. We Pick Up</h3>
+      <p>Our team comes to collect your laundry at your preferred time and location — no hassle, no delays.</p>
+    </div>
+
+    <div class="step">
+      <div class="icon">🧼</div>
+      <h3>3. We Wash & Care</h3>
+      <p>Clothes are professionally washed, ironed, and treated with care based on fabric and type.</p>
+    </div>
+
+    <div class="step">
+      <div class="icon">🏡</div>
+      <h3>4. We Deliver</h3>
+      <p>Your clean, fresh laundry is delivered back to your doorstep — ready to wear!</p>
+    </div>
+
+  </div>
+</section>
+
+<!--  Contact & Social Media Section -->
+<section class="contact" id="contact">
+  <h2>📞 Get in Touch With Us</h2>
+  <p class="contact-subtitle">We’d love to hear from you — whether it’s a question, feedback, or a custom laundry request.</p>
+
+  <div class="contact-container">
+
+    <!--  Contact Info -->
+    <div class="contact-info">
+      <h3>Contact Information</h3>
+      <p><strong>📍 Address:</strong> MATHARE NORTH AREA4, Nairobi, Kenya</p>
+      <p><strong>📞 Phone:</strong> +254 712 822 302</p>
+      <p><strong>✉️ Email:</strong> laundrylink@gmail.com</p>
+      <p><strong>🕐 Working Hours:</strong> Mon – Sat: 8:00 AM – 8:00 PM</p>
+    </div>
+
+    <!-- Social Media -->
+    <div class="social-media">
+      <h3>Follow Us</h3>
+      <div class="social-links">
+        <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
+        <a href="#" class="social-icon instagram"><i class="fab fa-instagram"></i> Instagram</a>
+        <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i> Twitter / X</a>
+        <a href="#" class="social-icon tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+        <a href="#" class="social-icon whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quick Contact Form -->
+  <form class="contact-form" method="POST" action="#">
+    <h3>Send Us a Message</h3>
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <textarea name="message" placeholder="Your Message..." required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+
+<section class="cta">
+  <h2>Ready to Experience Hassle-Free Laundry?</h2>
+  <p>Join hundreds of happy customers who trust Laundry Link.</p>
+  <a href="{{ url_for('register') }}" class="btn btn-primary">Sign Up Now</a>
+</section>
+
+{% endblock %}

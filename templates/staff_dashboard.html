@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="staff-dashboard">
+  <div class="container">
+    <h2>Staff Dashboard 🧺</h2>
+    <p>Welcome back! Here are your assigned orders:</p>
+
+    {% if orders %}
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Client</th>
+          <th>Service</th>
+          <th>Quantity</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for o in orders %}
+        <tr>
+          <td>{{ o.id }}</td>
+          <td>{{ o.user.name }}</td>
+          <td>{{ o.service_type }}</td>
+          <td>{{ o.items }}</td>
+          <td>
+            <span class="badge {{ o.status|lower|replace(' ', '-') }}">{{ o.status }}</span>
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('update_order_status', order_id=o.id) }}">
+              <select name="status" class="status-select">
+                <option {% if o.status == 'Picked Up' %}selected{% endif %}>Picked Up</option>
+                <option {% if o.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option {% if o.status == 'Completed' %}selected{% endif %}>Completed</option>
+              </select>
+              <button type="submit" class="btn-update">Update</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="no-orders">No assigned orders yet.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

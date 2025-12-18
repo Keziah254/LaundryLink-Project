@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Client Dashboard | LaundryLink{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Welcome, {{ user.name }} 👋</h2>
+
+    <!-- Section 1: Quick Actions -->
+    <div class="quick-actions">
+        <a href="{{ url_for('place_order') }}" class="btn-primary">🧺 Place New Order</a>
+        <a href="{{ url_for('client_orders') }}" class="btn-secondary">📦 View Orders</a>
+        <a href="{{ url_for('client_profile') }}" class="btn-secondary">👤 Edit Profile</a>
+    </div>
+
+    <!-- Section 2: Available Services -->
+    <section class="services-section">
+        <h3>Available Laundry Services</h3>
+        <div class="service-cards">
+            {% for service in services %}
+    <div class="service-card">
+        <img src="{{ url_for('static', filename=service.image) }}" alt="{{ service.name }}">
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        <p><strong>KES {{ service.price }}</strong> / {{ service.unit }}</p>
+    </div>
+{% endfor %}
+
+        </div>
+    </section>
+
+    <!-- Section 3: Recent Orders -->
+    <section class="orders-section">
+        <h3>Your Recent Orders</h3>
+        {% if recent_orders %}
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Service</th>
+                    <th>Items</th>
+                    <th>Total (KES)</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.service_type }}</td>
+                    <td>{{ order.items }}</td>
+                    <td>{{ order.price }}</td>
+                    <td>
+                        {% if order.status == "Pending" %}
+                            <span class="badge pending">Pending</span>
+                        {% elif order.status == "In Progress" %}
+                            <span class="badge progress">In Progress</span>
+                        {% elif order.status == "Completed" %}
+                            <span class="badge completed">Completed</span>
+                        {% elif order.status == "Delivered" %}
+                            <span class="badge delivered">Delivered</span>
+                        {% else %}
+                            <span class="badge unknown">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ order.created_at.strftime("%Y-%m-%d") }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-orders">You haven’t placed any orders yet.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

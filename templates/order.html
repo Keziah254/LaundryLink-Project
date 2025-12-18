@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Place a Laundry Order</h2>
+
+  <form method="POST">
+    <label for="service">Select Service:</label>
+    <select name="service_type" id="service" required>
+      <option value="Wash & Dry">Wash & Dry</option>
+      <option value="Wash & Iron">Wash & Iron</option>
+      <option value="Dry Clean">Dry Clean</option>
+    </select>
+
+    <label for="items">Number of Items:</label>
+    <input type="number" name="items" id="items" placeholder="e.g. 5" required>
+
+    <button type="submit">Place Order</button>
+  </form>
+{% endblock %}

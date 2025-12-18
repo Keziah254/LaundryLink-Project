@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="admin-dashboard">
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="card"><h3>Total Orders</h3><p>{{ total_orders }}</p></div>
+      <div class="card"><h3>Total Clients</h3><p>{{ total_clients }}</p></div>
+      <div class="card"><h3>Total Staff</h3><p>{{ total_staff }}</p></div>
+      <div class="card"><h3>Total Revenue</h3><p>KES {{ total_revenue }}</p></div>
+    </div>
+
+    <!-- Orders by Status -->
+    <h3>Order Summary</h3>
+    <div class="status-grid">
+      {% for key, value in status_counts.items() %}
+        <div class="status-card">
+          <h4>{{ key }}</h4>
+          <p>{{ value }}</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Manage Orders -->
+    <h3>All Orders</h3>
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Client</th><th>Service</th><th>Staff</th>
+          <th>Status</th><th>Payment</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+       {% for o in orders %}
+<tr>
+  <td>{{ o.id }}</td>
+  <td>{{ o.user.name }}</td>
+  <td>{{ o.service_type }}</td>
+  <td>{{ o.staff.name if o.staff else 'Unassigned' }}</td>
+  <td>{{ o.status }}</td>
+
+  <!--  Payment Column -->
+  <td>
+    <form action="{{ url_for('update_payment', order_id=o.id) }}" method="POST" style="display:inline-flex; align-items:center; gap:6px;">
+      <select name="payment_status" style="padding:4px 6px; border-radius:6px; border:1px solid #ccc; background:#fff;">
+        <option value="pending" {% if o.payment_status =='pending' %}selected{% endif %}>Pending</option>
+        <option value="paid" {% if o.payment_status =='paid' %}selected{% endif %}>Paid</option>
+        <option value="failed" {% if o.payment_status =='failed' %}selected{% endif %}>Failed</option>
+      </select>
+      <button type="submit" class="btn small" style="background-color:#ff7b00; color:#000; border:none; padding:5px 10px; border-radius:6px; cursor:pointer;">
+        Update
+      </button>
+    </form>
+  </td>
+
+  <!--  Payment Status Badge -->
+  <td>
+    {% if o.payment_status == 'paid' %}
+      <span style="background:#27ae60; color:white; padding:4px 8px; border-radius:6px;">Paid</span>
+    {% elif o.payment_status == 'pending' %}
+      <span style="background:#f39c12; color:white; padding:4px 8px; border-radius:6px;">Pending</span>
+    {% else %}
+      <span style="background:#c0392b; color:white; padding:4px 8px; border-radius:6px;">Failed</span>
+    {% endif %}
+  </td>
+
+  <!--  Action Buttons -->
+  <td style="white-space:nowrap;">
+    <a href="{{ url_for('assign_order', order_id=o.id) }}" class="btn small" style="background-color:#0a3d62; color:white; border:none; padding:6px 10px; border-radius:6px; text-decoration:none; margin-right:5px;">
+      Assign
+    </a>
+    <a href="{{ url_for('update_order_status', order_id=o.id) }}" class="btn small" style="background-color:#60a3bc; color:white; border:none; padding:6px 10px; border-radius:6px; text-decoration:none;">
+      Update
+    </a>
+
+  </td>
+</tr>
+{% endfor %}
+
+      </tbody>
+    </table>
+
+    <!-- Manage Users -->
+    <h3>Registered Users</h3>
+    <table class="orders-table">
+      <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+          <tr><td>{{ u.id }}</td><td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.role }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Admin Dashboard</h2>
+
+<!-- Admin Navigation Buttons -->
+<div style="margin-bottom: 20px;">
+  <a href="{{ url_for('admin_dashboard') }}"
+     style="padding:10px 15px; background:#0a3d62; color:white; border-radius:6px; text-decoration:none; margin-right:10px;">
+     Dashboard
+  </a>
+
+  <a href="{{ url_for('admin_analytics') }}"
+     style="padding:10px 15px; background:#ff7b00; color:black; border-radius:6px; text-decoration:none;">
+     Analytics Dashboard
+  </a>
+ <a href="{{ url_for('service_trends') }}" class="btn small"
+   style="background:#ff7b00; color:black; margin-top:10px;">
+   View Service Trends
+</a>
+
+<form method="GET" class="filter-form" style="margin-bottom:20px;">
+  <label>Filter by:</label>
+
+  <select name="range" onchange="this.form.submit()"
+    style="padding:6px 10px; border-radius:6px;">
+    <option value="">All Time</option>
+    <option value="today" {% if selected_range=='today' %}selected{% endif %}>Today</option>
+    <option value="7" {% if selected_range=='7' %}selected{% endif %}>Last 7 Days</option>
+    <option value="30" {% if selected_range=='30' %}selected{% endif %}>Last 30 Days</option>
+  </select>
+</form>
+
+
+</div>
+
+  </div>
+</section>
+{% endblock %}

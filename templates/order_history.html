@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="orders">
+  <div class="container">
+    <h2>Your Orders</h2>
+    <table class="orders-table">
+      <thead><tr><th>#</th><th>Date</th><th>Service</th><th>Qty</th><th>Price</th><th>Payment</th><th>Status</th><th>Receipt</th></tr></thead>
+     <tbody>
+{% for o in orders %}
+  <tr>
+    <td>{{ o.id }}</td>
+    <td>{{ o.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ o.service_type }}</td>
+    <td>{{ o.items }}</td>
+    <td>KES {{ o.price }}</td>
+    <td>{{ o.payment_method }} / {{ o.payment_status }}</td>
+    <td id="order-status-{{ o.id }}">{{ o.status }}</td>
+    <td><a href="{{ url_for('download_receipt', order_id=o.id) }}">Download</a></td>
+  </tr>
+{% endfor %}
+</tbody>
+
+    </table>
+  </div>
+</section>
+
+<script>
+// Poll status every 5 seconds for visible orders
+const orderIds = [{% for o in orders %}{{ o.id }},{% endfor %}];
+function pollStatuses(){
+  orderIds.forEach(id=>{
+    fetch(`/client/order_status/${id}`).then(r=>r.json()).then(data=>{
+      if(!data.error){
+        document.getElementById('order-status-'+id).innerText = data.status;
+      }
+    }).catch(e=>console.log(e));
+  });
+}
+setInterval(pollStatuses, 5000);
+pollStatuses();
+</script>
+{% endblock %}

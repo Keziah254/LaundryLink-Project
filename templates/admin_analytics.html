@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Analytics Dashboard</h2>
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div style="width: 45%; float:left;">
+    <h3>Order Status Distribution</h3>
+    <canvas id="statusChart"></canvas>
+</div>
+
+<div style="width: 45%; float:right;">
+    <h3>Daily Orders</h3>
+    <canvas id="dailyChart"></canvas>
+</div>
+
+<script>
+    // ----- PIE CHART -----
+    var ctx1 = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            labels: {{ labels_status|tojson }},
+            datasets: [{
+                data: {{ values_status|tojson }},
+                backgroundColor: ['red','blue','green','orange','purple']
+            }]
+        }
+    });
+
+    // ----- BAR CHART -----
+    var ctx2 = document.getElementById('dailyChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: {{ labels_daily|tojson }},
+            datasets: [{
+                label: 'Orders',
+                data: {{ values_daily|tojson }},
+                backgroundColor: 'blue'
+            }]
+        }
+    });
+</script>
+
+{% endblock %}
