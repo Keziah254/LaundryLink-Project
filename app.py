@@ -28,6 +28,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
+# Move this here so Render runs it every time the app starts
+with app.app_context():
+    db.create_all()
+
+    # Optional: Keep your "default services" logic here too
+    # so your prices and services are added automatically on the first run.
+
 
 # ------------------- ROUTES -------------------
 
