@@ -8,7 +8,6 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from datetime import datetime, timedelta
 
-
 # App setup
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -21,21 +20,20 @@ instance_path = os.path.join(BASE_DIR, 'instance')
 if not os.path.exists(instance_path):
     os.makedirs(instance_path)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'laundry.db')
+# Use Render's PostgreSQL if available, otherwise fallback to SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(instance_path, 'laundry.db'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize DB + Bcrypt
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
-# Move this here so Render runs it every time the app starts
-with app.app_context():
-    db.create_all()
-
-    #  only runs once if no services exist
+# --- DATABASE SETUP FUNCTION ---
+def initialize_database():
+    with app.app_context():
+        db.create_all()
     if not Service.query.first():
         print("🧺 Adding default laundry services...")
-        from models import Service
 
         default_services = [
             {"name": "Basic Washing", "description": "Normal wash & dry, folded neatly.", "price": 200, "unit": "kg",
@@ -62,6 +60,9 @@ with app.app_context():
         db.session.commit()
         print("Default laundry services added!")
 
+
+# Run database initialization once on startup
+initialize_database()
 #  ROUTES
 
 @app.route('/')
@@ -595,8 +596,8 @@ def service_trends():
     )
 
 
-
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+    # This block ONLY runs if you run 'python app.py' locally.
+    # It is IGNORED by Gunicorn on Render.
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
