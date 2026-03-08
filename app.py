@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 # App setup
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
-ADMIN_SECRET = "LaundryMaster2025"  # change this to something strong
+ADMIN_SECRET = "LaundryMaster2025"
 
 
 # Path for SQLite
@@ -32,8 +32,37 @@ bcrypt = Bcrypt(app)
 with app.app_context():
     db.create_all()
 
-    # Optional: Keep your "default services" logic here too
-    # so your prices and services are added automatically on the first run.
+    #  only runs once if no services exist
+    if not Service.query.first():
+        print("🧺 Adding default laundry services...")
+        from models import Service
+
+        default_services = [
+            {"name": "Basic Washing", "description": "Normal wash & dry, folded neatly.", "price": 200, "unit": "kg",
+             "image": "images/washing.jpeg"},
+            {"name": "Ironing / Pressing", "description": "Iron-only or iron + folding.", "price": 50, "unit": "item",
+             "image": "images/ironing.jpeg"},
+            {"name": "Dry Cleaning", "description": "Delicate fabrics (suits, gowns, jackets).", "price": 600,
+             "unit": "item", "image": "images/drycleaning.jpeg"},
+            {"name": "Wash & Iron Combo", "description": "Full wash, dry, and iron service.", "price": 350,
+             "unit": "kg", "image": "images/combo.jpeg"},
+            {"name": "Stain Removal", "description": "Targeted removal of tough stains.", "price": 150, "unit": "item",
+             "image": "images/stain.jpeg"},
+            {"name": "Special Fabric Care", "description": "Blankets, duvets, and curtains.", "price": 700,
+             "unit": "item", "image": "images/special.jpeg"},
+            {"name": "Pickup & Delivery", "description": "We collect and deliver laundry.", "price": 200,
+             "unit": "order", "image": "images/pickup.jpeg"},
+            {"name": "Subscription Packages", "description": "Weekly or monthly laundry plans.", "price": 2500,
+             "unit": "month", "image": "images/subscription.jpeg"},
+            {"name": "Express / Same-Day", "description": "Fast laundry service, delivered the same day.", "price": 400,
+             "unit": "kg", "image": "images/express.jpeg"}
+        ]
+        for s in default_services:
+            db.session.add(Service(**s))
+        db.session.commit()
+        print("Default laundry services added!")
+
+app.run(debug=True)
 
 
 # ------------------- ROUTES -------------------
@@ -568,32 +597,6 @@ def service_trends():
         datasets=datasets
     )
 
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-
-        #  only runs once if no services exist
-        if not Service.query.first():
-            print("🧺 Adding default laundry services...")
-            from models import Service
-            default_services = [
-                {"name": "Basic Washing", "description": "Normal wash & dry, folded neatly.", "price": 200, "unit": "kg", "image": "images/washing.jpeg"},
-                {"name": "Ironing / Pressing", "description": "Iron-only or iron + folding.", "price": 50, "unit": "item", "image": "images/ironing.jpeg"},
-                {"name": "Dry Cleaning", "description": "Delicate fabrics (suits, gowns, jackets).", "price": 600, "unit": "item", "image": "images/drycleaning.jpeg"},
-                {"name": "Wash & Iron Combo", "description": "Full wash, dry, and iron service.", "price": 350, "unit": "kg", "image": "images/combo.jpeg"},
-                {"name": "Stain Removal", "description": "Targeted removal of tough stains.", "price": 150, "unit": "item", "image": "images/stain.jpeg"},
-                {"name": "Special Fabric Care", "description": "Blankets, duvets, and curtains.", "price": 700, "unit": "item", "image": "images/special.jpeg"},
-                {"name": "Pickup & Delivery", "description": "We collect and deliver laundry.", "price": 200, "unit": "order", "image": "images/pickup.jpeg"},
-                {"name": "Subscription Packages", "description": "Weekly or monthly laundry plans.", "price": 2500, "unit": "month", "image": "images/subscription.jpeg"},
-                {"name": "Express / Same-Day", "description": "Fast laundry service, delivered the same day.", "price": 400, "unit": "kg", "image": "images/express.jpeg"}
-            ]
-            for s in default_services:
-                db.session.add(Service(**s))
-            db.session.commit()
-            print("Default laundry services added!")
-
-    app.run(debug=True)
 
 
 if __name__ == '__main__':
