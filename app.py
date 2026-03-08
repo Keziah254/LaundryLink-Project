@@ -62,10 +62,7 @@ with app.app_context():
         db.session.commit()
         print("Default laundry services added!")
 
-app.run(debug=True)
-
-
-# ------------------- ROUTES -------------------
+#  ROUTES
 
 @app.route('/')
 def index():
