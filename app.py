@@ -1,4 +1,6 @@
 import os
+import hashlib
+
 from io import BytesIO
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, abort
 from werkzeug.utils import send_file
@@ -28,41 +30,44 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
+
 # --- DATABASE SETUP FUNCTION ---
 def initialize_database():
     with app.app_context():
+        # Create tables
         db.create_all()
-    if not Service.query.first():
-        print("🧺 Adding default laundry services...")
 
-        default_services = [
-            {"name": "Basic Washing", "description": "Normal wash & dry, folded neatly.", "price": 200, "unit": "kg",
-             "image": "images/washing.jpeg"},
-            {"name": "Ironing / Pressing", "description": "Iron-only or iron + folding.", "price": 50, "unit": "item",
-             "image": "images/ironing.jpeg"},
-            {"name": "Dry Cleaning", "description": "Delicate fabrics (suits, gowns, jackets).", "price": 600,
-             "unit": "item", "image": "images/drycleaning.jpeg"},
-            {"name": "Wash & Iron Combo", "description": "Full wash, dry, and iron service.", "price": 350,
-             "unit": "kg", "image": "images/combo.jpeg"},
-            {"name": "Stain Removal", "description": "Targeted removal of tough stains.", "price": 150, "unit": "item",
-             "image": "images/stain.jpeg"},
-            {"name": "Special Fabric Care", "description": "Blankets, duvets, and curtains.", "price": 700,
-             "unit": "item", "image": "images/special.jpeg"},
-            {"name": "Pickup & Delivery", "description": "We collect and deliver laundry.", "price": 200,
-             "unit": "order", "image": "images/pickup.jpeg"},
-            {"name": "Subscription Packages", "description": "Weekly or monthly laundry plans.", "price": 2500,
-             "unit": "month", "image": "images/subscription.jpeg"},
-            {"name": "Express / Same-Day", "description": "Fast laundry service, delivered the same day.", "price": 400,
-             "unit": "kg", "image": "images/express.jpeg"}
-        ]
-        for s in default_services:
-            db.session.add(Service(**s))
-        db.session.commit()
-        print("Default laundry services added!")
+        # Check if services exist (This MUST be indented inside the 'with' block)
+        if not Service.query.first():
+            print("🧺 Adding default laundry services...")
 
+            default_services = [
+                {"name": "Basic Washing", "description": "Normal wash & dry, folded neatly.", "price": 200,
+                 "unit": "kg", "image": "images/washing.jpeg"},
+                {"name": "Ironing / Pressing", "description": "Iron-only or iron + folding.", "price": 50,
+                 "unit": "item", "image": "images/ironing.jpeg"},
+                {"name": "Dry Cleaning", "description": "Delicate fabrics (suits, gowns, jackets).", "price": 600,
+                 "unit": "item", "image": "images/drycleaning.jpeg"},
+                {"name": "Wash & Iron Combo", "description": "Full wash, dry, and iron service.", "price": 350,
+                 "unit": "kg", "image": "images/combo.jpeg"},
+                {"name": "Stain Removal", "description": "Targeted removal of tough stains.", "price": 150,
+                 "unit": "item", "image": "images/stain.jpeg"},
+                {"name": "Special Fabric Care", "description": "Blankets, duvets, and curtains.", "price": 700,
+                 "unit": "item", "image": "images/special.jpeg"},
+                {"name": "Pickup & Delivery", "description": "We collect and deliver laundry.", "price": 200,
+                 "unit": "order", "image": "images/pickup.jpeg"},
+                {"name": "Subscription Packages", "description": "Weekly or monthly laundry plans.", "price": 2500,
+                 "unit": "month", "image": "images/subscription.jpeg"},
+                {"name": "Express / Same-Day", "description": "Fast laundry service, delivered the same day.",
+                 "price": 400, "unit": "kg", "image": "images/express.jpeg"}
+            ]
 
-# Run database initialization once on startup
-initialize_database()
+            for s in default_services:
+                db.session.add(Service(**s))
+
+            db.session.commit()
+            print("Default laundry services added!")
+
 #  ROUTES
 
 @app.route('/')
@@ -550,9 +555,9 @@ def admin_analytics():
 
     # --- BAR CHART: DAILY ORDERS ---
     daily_data = db.session.query(
-        db.func.date(Order.date_created),
+        db.func.date(Order.created_at),
         db.func.count(Order.id)
-    ).group_by(db.func.date(Order.date_created)).all()
+    ).group_by(db.func.date(Order.created_at)).all()
 
     labels_daily = [str(row[0]) for row in daily_data]
     values_daily = [row[1] for row in daily_data]
@@ -594,6 +599,7 @@ def service_trends():
         labels=labels,
         datasets=datasets
     )
+initialize_database()
 
 
 if __name__ == '__main__':
